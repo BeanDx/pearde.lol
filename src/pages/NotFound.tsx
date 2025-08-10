@@ -58,17 +58,19 @@ export default function NotFound() {
   }, [header]);
 
   // стрим логов по одной строке
-  const dumpDmesg = () => {
+    const dumpDmesg = () => {
     let k = 0;
     const push = () => {
-      setLines((l) => [...l, DMESG[k]]);
-      k++;
-      if (k < DMESG.length) t = window.setTimeout(push, 90);
+        setLines(l => [...l, DMESG[k]]);
+        k++;
+        if (k < DMESG.length) {
+        window.setTimeout(push, 90);
+        }
     };
-    // пустая строка-разделитель
-    setLines((l) => [...l, ""]);
-    let t = window.setTimeout(push, 60);
-  };
+  // пустая строка-разделитель
+  setLines(l => [...l, ""]);
+  window.setTimeout(push, 60);
+};
 
   // хоткеи — раскладка-независимо через e.code
   useEffect(() => {
