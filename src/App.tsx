@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 
-function App() {
-  const [count, setCount] = useState(0)
+import Header from "./components/Header";
+import Home from "./pages/Home";
+import Rices from "./pages/Rices";
+import Contacts from "./pages/Contacts";
+import NotFound from "./pages/NotFound";
+
+function RouterView() {
+  const location = useLocation();
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Header />
+      <main className="max-w-6xl mx-auto px-6 py-10">
+        <AnimatePresence mode="wait">
+          {/* ключуем обёртку — AnimatePresence видит уход/приход */}
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 12, filter: "blur(2px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -8, filter: "blur(2px)" }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+          >
+            <Routes location={location}>
+              <Route path="/" element={<Home />} />
+              <Route path="/rices" element={<Rices />} />
+              <Route path="/contacts" element={<Contacts />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </motion.div>
+        </AnimatePresence>
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+export default function App() {
+  return (
+    <MotionConfig reducedMotion="never">
+      <BrowserRouter>
+        <RouterView />
+      </BrowserRouter>
+    </MotionConfig>
+  );
+}
