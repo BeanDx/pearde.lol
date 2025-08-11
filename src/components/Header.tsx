@@ -29,7 +29,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0f172a]/80 backdrop-blur">
-      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between"> {/* Увеличена высота шапки */}
         {/* бренд → домой */}
         <NavLink
           to="/"
@@ -38,7 +38,7 @@ export default function Header() {
           className="group flex items-center gap-3 text-slate-200 hover:text-white"
           aria-label="Go home"
         >
-          <span className="text-[1.05rem] font-semibold">pearde</span>
+          <span className="text-[1.25rem] font-semibold">pearde</span> {/* Увеличен размер шрифта */}
           <span className="text-slate-400">×</span>
           <ArchIcon className="h-[22px] w-[22px] text-[var(--arch)] group-hover:drop-shadow-[0_0_6px_#1793D1]" />
           <span className="text-slate-400">=</span>
@@ -47,7 +47,7 @@ export default function Header() {
         </NavLink>
 
         {/* десктоп меню */}
-        <nav className="hidden md:flex gap-2">
+        <nav className="hidden md:flex gap-4"> {/* Увеличены промежутки между элементами меню */}
           {links.map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => tab(isActive)}>
               {l.label}
