@@ -1,5 +1,5 @@
 import { motion, useInView } from "framer-motion";
-import type { Variants, TargetAndTransition } from "framer-motion";
+import type { Variants, TargetAndTransition, Transition } from "framer-motion";
 import { useRef } from "react";
 
 type Item = {
@@ -8,7 +8,6 @@ type Item = {
   desc?: string;
 };
 
-// stuff I did + when I did it
 const items: Item[] = [
   { period: "2020",           title: "<h1>HTML + CSS</h1>", desc: "First spaghetti and pixel-perfect obsession." },
   { period: "2020 — Forever", title: 'echo "Linux"', desc: "Arch btw. Ricing, window managers, dotfiles — been living here since." },
@@ -16,10 +15,10 @@ const items: Item[] = [
   { period: "2023 — 2024",    title: 'std::cout << "C++" << std::endl;', desc: "Pointers, memory, pain — but blazing fast." },
 ];
 
-// easing curve for the animation
+// общая кривая
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-// how each timeline item should look when hidden / shown
+// анимация появления айтемов
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 24, filter: "blur(4px)" },
   show: (i: number): TargetAndTransition => ({
@@ -30,13 +29,47 @@ const itemVariants: Variants = {
   }),
 };
 
+// волна для "line" — типобезопасно
+const wave = (i: number): TargetAndTransition => ({
+  y: [0, -4, 0],
+  transition: {
+    delay: i * 0.1,
+    repeat: Infinity,
+    repeatType: "loop",         // <— конкретный литерал
+    duration: 1.2,
+    ease: EASE,                 // <— кубик-Безье вместо строки
+  } as Transition,
+});
+
+const wavyVariants: Variants = {
+  initial: { y: 0 },
+  animate: wave,
+};
+
 export default function Timeline() {
+  const wavyText = "line".split("");
+
   return (
     <section className="space-y-6">
-      <h2 className="text-2xl md:text-3xl font-semibold">Timeline</h2>
+      {/* Заголовок с wavy-эффектом на "line" */}
+      <h2 className="text-2xl md:text-3xl font-semibold flex">
+        Time
+        {wavyText.map((char, i) => (
+          <motion.span
+            key={i}
+            custom={i}
+            variants={wavyVariants}
+            initial="initial"
+            animate="animate"
+            className="inline-block text-[var(--arch)]"
+          >
+            {char}
+          </motion.span>
+        ))}
+      </h2>
 
       <div className="relative">
-        {/* vertical glowing line down the middle */}
+        {/* вертикальная светящаяся линия */}
         <div
           className="absolute left-4 md:left-6 top-0 h-full w-px"
           style={{
@@ -48,11 +81,10 @@ export default function Timeline() {
         <ul className="space-y-6">
           {items.map((it, i) => {
             const ref = useRef<HTMLLIElement | null>(null);
-
             const inView = useInView(ref, {
-              amount: 0.35, // how much of the item has to be visible before we trigger
-              once: false,  // we want it to animate both in and out
-              margin: "-10% 0px -10% 0px", // tweak trigger zone so it feels snappier
+              amount: 0.35,
+              once: false,
+              margin: "-10% 0px -10% 0px",
             });
 
             return (
@@ -63,9 +95,9 @@ export default function Timeline() {
                 variants={itemVariants}
                 custom={i}
                 initial="hidden"
-                animate={inView ? "show" : "hidden"} // collapse when scrolled away
+                animate={inView ? "show" : "hidden"}
               >
-                {/* lil' glowing dot */}
+                {/* точка */}
                 <span
                   className="absolute left-3 md:left-5 top-2 h-3.5 w-3.5 rounded-full ring-4"
                   style={{
@@ -75,7 +107,7 @@ export default function Timeline() {
                   }}
                 />
 
-                {/* the card itself */}
+                {/* карточка */}
                 <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm hover:ring-1 hover:ring-[color:var(--arch)]/35 transition">
                   <div className="text-[0.85rem] text-slate-400">{it.period}</div>
                   <div className="mt-0.5 text-lg font-medium text-slate-100">{it.title}</div>
