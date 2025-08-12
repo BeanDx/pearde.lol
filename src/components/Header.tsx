@@ -57,7 +57,10 @@ export default function Header() {
       : "text-slate-300 hover:text-white hover:bg-white/5");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0f172a]/80 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-white/10
+  bg-[#0f172a]/70 backdrop-blur-md supports-[backdrop-filter:blur(0)]:bg-[#0f172a]/60
+  isolate">
+
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* бренд → домой */}
         <motion.div
