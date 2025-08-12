@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FakeTerminal from "../components/ui/FakeTerminal";
 
 const TUX = String.raw`
       .--.
@@ -35,7 +36,7 @@ export default function NotFound() {
   const [printing, setPrinting] = useState<string>("");
   const [typedDone, setTypedDone] = useState(false);
 
-  // печать хедера (тайпрайтер)
+  // Typewriter for the header
   useEffect(() => {
     let i = 0, j = 0;
     const tick = () => {
@@ -57,22 +58,21 @@ export default function NotFound() {
     return () => window.clearTimeout(timer);
   }, [header]);
 
-  // стрим логов по одной строке
-    const dumpDmesg = () => {
+  // Stream fake dmesg logs
+  const dumpDmesg = () => {
     let k = 0;
     const push = () => {
-        setLines(l => [...l, DMESG[k]]);
-        k++;
-        if (k < DMESG.length) {
+      setLines((l) => [...l, DMESG[k]]);
+      k++;
+      if (k < DMESG.length) {
         window.setTimeout(push, 90);
-        }
+      }
     };
-  // пустая строка-разделитель
-  setLines(l => [...l, ""]);
-  window.setTimeout(push, 60);
-};
+    setLines((l) => [...l, ""]); // empty separator
+    window.setTimeout(push, 60);
+  };
 
-  // хоткеи — раскладка-независимо через e.code
+  // Hotkeys
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       switch (e.code) {
@@ -93,64 +93,66 @@ export default function NotFound() {
 
   return (
     <section className="min-h-[70vh] grid place-items-center">
-      <div className="crt w-full max-w-4xl rounded-2xl border border-white/10 bg-[#0b0f14] p-8">
-        <div className="grid md:grid-cols-[1fr_auto] gap-8">
-          {/* text */}
-          <div className="font-mono text-slate-200">
-            {lines.map((l, idx) => (
-              <div key={idx} className={idx === 0 ? "text-red-400" : ""}>
-                {l}
-              </div>
-            ))}
-            {/* печатаемая сейчас строка */}
-            {!typedDone && (
-              <div className="text-red-400">
-                {printing}
-                <span className="caret" />
-              </div>
-            )}
-
-            <div className="mt-6 text-xs text-slate-400 whitespace-pre-wrap">
-              PID: 404   TASK: beand@arch   COMM: "pearde.lol"
-              {"\n"}Call Trace: [&lt;ffffffff&gt;] try_to_open(/404) → nope() → go_home()
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-2">
-              <button
-                onClick={() => nav("/", { replace: true })}
-                className="inline-flex items-center gap-2 rounded-md bg-[#1793D1]/20 px-3 py-1.5 text-[#1793D1] ring-1 ring-[#1793D1]/40 hover:bg-[#1793D1]/30 transition"
-                title="R"
-              >
-                ↩︎ Back to Home <span className="text-xs text-slate-400">(R)</span>
-              </button>
-              <button
-                onClick={dumpDmesg}
-                className="inline-flex items-center gap-2 rounded-md bg-white/5 px-3 py-1.5 text-slate-300 hover:bg-white/10 transition"
-                title="D"
-              >
-                 Dump dmesg <span className="text-xs text-slate-500">(D)</span>
-              </button>
-              <button
-                onClick={() =>
-                  setLines((l) => [...l, "", "keys: [R] reboot   [D] dmesg   [H] help"])
-                }
-                className="inline-flex items-center gap-2 rounded-md bg-white/5 px-3 py-1.5 text-slate-300 hover:bg-white/10 transition"
-                title="H"
-              >
-                ? Help <span className="text-xs text-slate-500">(H)</span>
-              </button>
-            </div>
+      <FakeTerminal
+        prompt="root@archlinux"
+        command="cat /404"
+        ascii={TUX}
+      >
+        {/* printed lines */}
+        {lines.map((l, idx) => (
+          <div
+            key={idx}
+            className={
+              idx <= 2
+                ? "text-red-400"
+                : "text-slate-200"
+            }
+          >
+            {l}
           </div>
+        ))}
 
-          {/* tux */}
-          <div className="hidden md:flex items-center justify-center">
-            <pre className="select-none text-[11px] leading-[11px] text-slate-300">
-{TUX}
-            </pre>
-            <div className="ml-4 text-6xl font-mono text-slate-200">!</div>
+
+        {!typedDone && (
+          <div className="text-red-400">
+            {printing}
+            <span className="caret" />
           </div>
+        )}
+
+        {/* footer trace */}
+        <div className="mt-6 text-xs text-slate-400 whitespace-pre-wrap">
+          PID: 404   TASK: beand@arch   COMM: "pearde.lol"
+          {"\n"}Call Trace: [&lt;ffffffff&gt;] try_to_open(/404) → nope() → go_home()
         </div>
-      </div>
+
+        {/* controls */}
+        <div className="mt-6 flex flex-wrap gap-2">
+          <button
+            onClick={() => nav("/", { replace: true })}
+            className="inline-flex items-center gap-2 rounded-md bg-[#1793D1]/20 px-3 py-1.5 text-[#1793D1] ring-1 ring-[#1793D1]/40 hover:bg-[#1793D1]/30 transition"
+            title="R"
+          >
+            ↩︎ Back to Home <span className="text-xs text-slate-400">(R)</span>
+          </button>
+          <button
+            onClick={dumpDmesg}
+            className="inline-flex items-center gap-2 rounded-md bg-white/5 px-3 py-1.5 text-slate-300 hover:bg-white/10 transition"
+            title="D"
+          >
+             Dump dmesg <span className="text-xs text-slate-500">(D)</span>
+          </button>
+          <button
+            onClick={() =>
+              setLines((l) => [...l, "", "keys: [R] reboot   [D] dmesg   [H] help"])
+            }
+            className="inline-flex items-center gap-2 rounded-md bg-white/5 px-3 py-1.5 text-slate-300 hover:bg-white/10 transition"
+            title="H"
+          >
+            ? Help <span className="text-xs text-slate-500">(H)</span>
+          </button>
+        </div>
+      </FakeTerminal>
     </section>
   );
 }
