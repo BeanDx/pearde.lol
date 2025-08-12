@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import FakeTerminal from "../ui/FakeTerminal";
+import { useTranslation } from "react-i18next";
 
 const ASCII_LOGO = String.raw`
     ____  _________    ____  ____  ______
@@ -20,6 +21,8 @@ const ASCII_PENGUIN = String.raw`
 `;
 
 export default function Bio() {
+  const { t } = useTranslation();
+
   return (
     <section className="max-w-6xl mx-auto space-y-4">
       {/* Терминал */}
@@ -32,22 +35,22 @@ export default function Bio() {
           className="mt-3 grid gap-x-4 gap-y-1 break-words"
           style={{ gridTemplateColumns: "max-content 1fr" }}
         >
-          <dt className="text-yellow-300">Name</dt>
+          <dt className="text-yellow-300">{t("bio.name")}</dt>
           <dd>Max</dd>
 
-          <dt className="text-yellow-300">Age</dt>
+          <dt className="text-yellow-300">{t("bio.age")}</dt>
           <dd>19</dd>
 
-          <dt className="text-yellow-300">Location</dt>
+          <dt className="text-yellow-300">{t("bio.location")}</dt>
           <dd>Cologne, Germany</dd>
 
-          <dt className="text-yellow-300">OS</dt>
+          <dt className="text-yellow-300">{t("bio.os")}</dt>
           <dd>Arch Linux (bspwm / hyprland / KDE (wayland))</dd>
 
-          <dt className="text-yellow-300">Languages</dt>
+          <dt className="text-yellow-300">{t("bio.languages")}</dt>
           <dd>C++, C#, JavaScript</dd>
 
-          <dt className="text-yellow-300">Info</dt>
+          <dt className="text-yellow-300">{t("bio.info")}</dt>
           <dd className="text-green-300/90 leading-relaxed">
             Frontend enjoyer, React clicker, ex-C# sorcerer, C++ pointer tamer,
             touched Kotlin once and survived. Knows enough code to make things
@@ -59,7 +62,7 @@ export default function Bio() {
       {/* Пингвин в той же секции, без разрыва фона */}
       <div className="flex flex-col items-center">
         <pre className="whitespace-pre text-emerald-400/80 text-[10px] sm:text-[12px] select-none leading-none">
-{ASCII_PENGUIN}
+          {ASCII_PENGUIN}
         </pre>
         <motion.a
           href="#weather"

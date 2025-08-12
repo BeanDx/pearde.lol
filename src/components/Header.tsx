@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { Transition, Variants } from "framer-motion";
 import { FaHome, FaUtensils, FaPhone } from "react-icons/fa";
+import LangSelect from "../components/ui/LangSelect";
 
 type LinkItem = {
   to: string;
@@ -20,7 +21,7 @@ const links: LinkItem[] = [
 const MotionNavLink = motion(NavLink);
 
 const tabVariants: Variants = {
-  rest:  { rotate: 0, y: 0, scale: 1 },
+  rest: { rotate: 0, y: 0, scale: 1 },
   hover: { rotate: -2, y: -1, scale: 1.02 },
 };
 
@@ -44,7 +45,7 @@ function ArchIcon({ className = "" }: { className?: string }) {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
 
   const tab = (active: boolean) =>
     "inline-flex items-center gap-2 leading-none transform-gpu origin-center will-change-transform " +
@@ -56,7 +57,6 @@ export default function Header() {
   return (
     <header className="fixed top-0 inset-x-0 z-[999] border-b border-white/10
       bg-[#0f172a]/70 backdrop-blur-md supports-[backdrop-filter:blur(0)]:bg-[#0f172a]/60">
-
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* бренд */}
         <motion.div
@@ -80,33 +80,39 @@ export default function Header() {
           </NavLink>
         </motion.div>
 
-        {/* десктоп меню */}
-        <nav className="hidden md:flex gap-4">
-          {links.map((l) => {
-            const Icon = l.Icon;
-            return (
-              <MotionNavLink
-                key={`${l.to}-${pathname}`}
-                to={l.to}
-                end={l.end}
-                className={({ isActive }) => tab(isActive)}
-                initial={false}
-                animate="rest"
-                whileHover="hover"
-                whileTap={{ scale: 0.98 }}
-                variants={tabVariants}
-                transition={tabSpring}
-              >
-                <Icon className="shrink-0 opacity-80" size={16} />
-                <span>{l.label}</span>
-              </MotionNavLink>
-            );
-          })}
-        </nav>
+        {/* десктоп меню + селектор */}
+        <div className="hidden md:flex items-center gap-4">
+          <nav className="flex gap-4">
+            {links.map((l) => {
+              const Icon = l.Icon;
+              return (
+                <MotionNavLink
+                  key={l.to} // не зависим от pathname, чтоб не ремоунтить
+                  to={l.to}
+                  end={l.end}
+                  className={({ isActive }) => tab(isActive)}
+                  initial={false}
+                  animate="rest"
+                  whileHover="hover"
+                  whileTap={{ scale: 0.98 }}
+                  variants={tabVariants}
+                  transition={tabSpring}
+                >
+                  <Icon className="shrink-0 opacity-80" size={16} />
+                  <span>{l.label}</span>
+                </MotionNavLink>
+              );
+            })}
+          </nav>
+
+          {/* селектор языка */}
+          <LangSelect />
+        </div>
 
         {/* бургер */}
         <motion.button
-          className="md:hidden text-slate-300 text-xl leading-none"
+          className="md:hidden grid place-items-center w-11 h-11 rounded-xl
+                     text-slate-200 bg-white/5 active:bg-white/10 relative z-[1001]"
           onClick={() => setOpen((s) => !s)}
           aria-label="menu"
           aria-expanded={open}
@@ -115,14 +121,17 @@ export default function Header() {
           transition={{ duration: 0.25 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          style={{ touchAction: "manipulation" }}
         >
-          ☰
+          <span className="text-xl leading-none">☰</span>
         </motion.button>
       </div>
 
-      {/* моб. меню — убрали лишний pb-4 в закрытом состоянии */}
+      {/* моб. меню — overflow.visible когда открыто, чтобы дропдаун не резался */}
       <motion.div
-        className={`md:hidden px-6 flex flex-col gap-2 overflow-hidden ${open ? "pb-4" : "pb-0"}`}
+        className={`md:hidden px-6 flex flex-col gap-2 ${
+          open ? "pb-4 overflow-visible" : "pb-0 overflow-hidden"
+        }`}
         initial={false}
         animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
         transition={{ duration: 0.25 }}
@@ -143,6 +152,8 @@ export default function Header() {
             </NavLink>
           );
         })}
+        {/* селектор языка в мобилке */}
+        <LangSelect />
       </motion.div>
     </header>
   );
