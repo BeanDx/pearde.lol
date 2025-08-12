@@ -2,7 +2,7 @@ import { TypeAnimation } from "react-type-animation";
 
 export default function Hero() {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between mt-16 md:mt-20">
       <h1 className="text-4xl md:text-5xl font-semibold">
         pearde -{" "}
         <span className="inline-block min-w-[8ch]">

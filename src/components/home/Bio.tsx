@@ -1,18 +1,32 @@
+import { motion } from "framer-motion";
 import FakeTerminal from "../ui/FakeTerminal";
 
-export default function Bio() {
-  return (
-    <section className="max-w-6xl mx-auto space-y-6">
-      <FakeTerminal
-        prompt="max@archlinux"
-        command="fastfetch"
-        ascii={String.raw`
+const ASCII_LOGO = String.raw`
     ____  _________    ____  ____  ______
    / __ \/ ____/   |  / __ \/ __ \/ ____/
   / /_/ / __/ / /| | / /_/ / / / / __/   
  / ____/ /___/ ___ |/ _, _/ /_/ / /___   
 /_/   /_____/_/  |_/_/ |_/_____/_____/   
-`}
+`;
+
+const ASCII_PENGUIN = String.raw`
+   .--.
+  |o_o |
+  |:_/ |
+ //   \ \
+(|     | )
+/'\_   _/` + "\\" + `
+\___)=(___/
+`;
+
+export default function Bio() {
+  return (
+    <section className="max-w-6xl mx-auto space-y-4">
+      {/* Терминал */}
+      <FakeTerminal
+        prompt="max@archlinux"
+        command="fastfetch"
+        ascii={ASCII_LOGO}
       >
         <dl
           className="mt-3 grid gap-x-4 gap-y-1 break-words"
@@ -41,6 +55,22 @@ export default function Bio() {
           </dd>
         </dl>
       </FakeTerminal>
+
+      {/* Пингвин в той же секции, без разрыва фона */}
+      <div className="flex flex-col items-center">
+        <pre className="whitespace-pre text-emerald-400/80 text-[10px] sm:text-[12px] select-none leading-none">
+{ASCII_PENGUIN}
+        </pre>
+        <motion.a
+          href="#weather"
+          initial={{ y: 0, opacity: 0.6 }}
+          animate={{ y: [0, -6, 0], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+          className="mt-1 inline-block text-sm sm:text-base text-slate-400 hover:text-slate-200 transition-colors"
+        >
+          ↓ scroll below 
+        </motion.a>
+      </div>
     </section>
   );
 }

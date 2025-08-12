@@ -17,16 +17,13 @@ const links: LinkItem[] = [
   { to: "/contacts", label: "Contacts", Icon: FaPhone },
 ];
 
-// анимируемый NavLink
 const MotionNavLink = motion(NavLink);
 
-// варианты анимации для табов
 const tabVariants: Variants = {
   rest:  { rotate: 0, y: 0, scale: 1 },
   hover: { rotate: -2, y: -1, scale: 1.02 },
 };
 
-// переход — явно типизируем, чтобы "type" был литералом, а не string
 const tabSpring: Transition = {
   type: "spring",
   stiffness: 500,
@@ -57,12 +54,11 @@ export default function Header() {
       : "text-slate-300 hover:text-white hover:bg-white/5");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10
-  bg-[#0f172a]/70 backdrop-blur-md supports-[backdrop-filter:blur(0)]:bg-[#0f172a]/60
-  isolate">
+    <header className="fixed top-0 inset-x-0 z-[999] border-b border-white/10
+      bg-[#0f172a]/70 backdrop-blur-md supports-[backdrop-filter:blur(0)]:bg-[#0f172a]/60">
 
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* бренд → домой */}
+        {/* бренд */}
         <motion.div
           className="select-none"
           whileHover={{ rotate: -1, y: -1 }}
@@ -90,7 +86,7 @@ export default function Header() {
             const Icon = l.Icon;
             return (
               <MotionNavLink
-                key={`${l.to}-${pathname}`} // ремоунт при смене роута → сброс
+                key={`${l.to}-${pathname}`}
                 to={l.to}
                 end={l.end}
                 className={({ isActive }) => tab(isActive)}
@@ -113,6 +109,7 @@ export default function Header() {
           className="md:hidden text-slate-300 text-xl leading-none"
           onClick={() => setOpen((s) => !s)}
           aria-label="menu"
+          aria-expanded={open}
           initial={{ rotate: 0 }}
           animate={{ rotate: open ? 45 : 0 }}
           transition={{ duration: 0.25 }}
@@ -123,12 +120,13 @@ export default function Header() {
         </motion.button>
       </div>
 
-      {/* моб. меню */}
+      {/* моб. меню — убрали лишний pb-4 в закрытом состоянии */}
       <motion.div
-        className="md:hidden px-6 pb-4 flex flex-col gap-2"
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: open ? 1 : 0, height: open ? "auto" : 0 }}
+        className={`md:hidden px-6 flex flex-col gap-2 overflow-hidden ${open ? "pb-4" : "pb-0"}`}
+        initial={false}
+        animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
         transition={{ duration: 0.25 }}
+        aria-hidden={!open}
       >
         {links.map((l) => {
           const Icon = l.Icon;
@@ -149,4 +147,3 @@ export default function Header() {
     </header>
   );
 }
-

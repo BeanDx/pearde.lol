@@ -10,10 +10,10 @@ type Item = {
 
 // stuff I did + when I did it
 const items: Item[] = [
-  { period: "2020",           title: "HTML + CSS", desc: "First spaghetti and pixel-perfect obsession." },
-  { period: "2020 — Forever", title: "Linux",      desc: "Arch btw. Ricing, window managers, dotfiles — been living here since." },
-  { period: "2020 — Present", title: "React",      desc: "SPA wizardry, animations, routing, state, production builds." },
-  { period: "2023 — 2024",    title: "C++",        desc: "Pointers, memory, pain — but blazing fast." },
+  { period: "2020",           title: "<h1>HTML + CSS</h1>", desc: "First spaghetti and pixel-perfect obsession." },
+  { period: "2020 — Forever", title: 'echo "Linux"', desc: "Arch btw. Ricing, window managers, dotfiles — been living here since." },
+  { period: "2020 — Present", title: 'console.log("React, tailwind, typescript, js, expressjs, mangoDB")', desc: "SPA wizardry, animations, routing, state, production builds." },
+  { period: "2023 — 2024",    title: 'std::cout << "C++" << std::endl;', desc: "Pointers, memory, pain — but blazing fast." },
 ];
 
 // easing curve for the animation
