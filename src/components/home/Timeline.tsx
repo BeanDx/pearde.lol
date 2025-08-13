@@ -51,7 +51,7 @@ export default function Timeline() {
   let animatedPart = "";
   if (lang === "ru") {
     staticPart = "Тайм";
-    animatedPart = "лист";
+    animatedPart = "лайн";
   } else if (lang === "de") {
     staticPart = "Zeit";
     animatedPart = "leiste";

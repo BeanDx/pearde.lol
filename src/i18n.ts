@@ -141,7 +141,7 @@ const resources = {
 
             // timeline
             timeline: {
-                title: "Таймлист",
+                title: "Таймлайн",
                 items: [
                     {
                         period: "2020",

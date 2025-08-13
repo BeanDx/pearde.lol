@@ -60,3 +60,11 @@ body::before {
   background: #0f172a; /* твой сине-тёмный */
   pointer-events: none;
 }
+
+@media (pointer: fine) {
+  .mag-scope, .mag-scope * {
+    cursor: none !important;
+  }
+}
+
+
