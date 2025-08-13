@@ -1,19 +1,12 @@
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import type { Variants, TargetAndTransition, Transition } from "framer-motion";
-import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 type Item = {
   period: string;
   title: string;
   desc?: string;
 };
-
-const items: Item[] = [
-  { period: "2020",           title: "<h1>HTML + CSS</h1>", desc: "First spaghetti and pixel-perfect obsession." },
-  { period: "2020 — Forever", title: 'echo "Linux"', desc: "Arch btw. Ricing, window managers, dotfiles — been living here since." },
-  { period: "2020 — Present", title: 'console.log("React, tailwind, typescript, js, expressjs, mangoDB")', desc: "SPA wizardry, animations, routing, state, production builds." },
-  { period: "2023 — 2024",    title: 'std::cout << "C++" << std::endl;', desc: "Pointers, memory, pain — but blazing fast." },
-];
 
 // общая кривая
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -29,15 +22,15 @@ const itemVariants: Variants = {
   }),
 };
 
-// волна для "line" — типобезопасно
+// волна для анимируемых букв
 const wave = (i: number): TargetAndTransition => ({
   y: [0, -4, 0],
   transition: {
     delay: i * 0.1,
     repeat: Infinity,
-    repeatType: "loop",         // <— конкретный литерал
+    repeatType: "loop",
     duration: 1.2,
-    ease: EASE,                 // <— кубик-Безье вместо строки
+    ease: EASE,
   } as Transition,
 });
 
@@ -47,16 +40,34 @@ const wavyVariants: Variants = {
 };
 
 export default function Timeline() {
-  const wavyText = "line".split("");
+  const { t, i18n } = useTranslation();
+  const lang = i18n.resolvedLanguage;
+
+  // Берём айтемы прямо из i18n
+  const items = t("timeline.items", { returnObjects: true }) as Item[];
+
+  // Заголовок: статичная + анимируемая часть
+  let staticPart = "";
+  let animatedPart = "";
+  if (lang === "ru") {
+    staticPart = "Тайм";
+    animatedPart = "лист";
+  } else if (lang === "de") {
+    staticPart = "Zeit";
+    animatedPart = "leiste";
+  } else {
+    staticPart = "Time";
+    animatedPart = "line";
+  }
 
   return (
     <section className="space-y-6">
-      {/* Заголовок с wavy-эффектом на "line" */}
+      {/* Заголовок с wavy-эффектом только на animatedPart */}
       <h2 className="text-2xl md:text-3xl font-semibold flex">
-        Time
-        {wavyText.map((char, i) => (
+        {staticPart}
+        {animatedPart.split("").map((char, i) => (
           <motion.span
-            key={i}
+            key={`${char}-${i}`}
             custom={i}
             variants={wavyVariants}
             initial="initial"
@@ -79,47 +90,38 @@ export default function Timeline() {
         />
 
         <ul className="space-y-6">
-          {items.map((it, i) => {
-            const ref = useRef<HTMLLIElement | null>(null);
-            const inView = useInView(ref, {
-              amount: 0.35,
-              once: false,
-              margin: "-10% 0px -10% 0px",
-            });
+          {items.map((it, i) => (
+            <motion.li
+              key={`${lang}-${it.period}-${it.title}`} // ключ привязан к языку — корректный ремоунт при смене языка
+              className="relative pl-12 md:pl-16"
+              variants={itemVariants}
+              custom={i}
+              initial="hidden"
+              whileInView="show"                     // ← вместо useInView()
+              viewport={{ amount: 0.35, once: false, margin: "-10% 0px -10% 0px" }}
+            >
+              {/* точка */}
+              <span
+                className="absolute left-3 md:left-5 top-2 h-3.5 w-3.5 rounded-full ring-4"
+                style={{
+                  background: "var(--arch)",
+                  boxShadow: "0 0 12px rgba(23,147,209,.65)",
+                  border: "1px solid rgba(255,255,255,.12)",
+                }}
+              />
 
-            return (
-              <motion.li
-                ref={ref}
-                key={it.period + it.title}
-                className="relative pl-12 md:pl-16"
-                variants={itemVariants}
-                custom={i}
-                initial="hidden"
-                animate={inView ? "show" : "hidden"}
-              >
-                {/* точка */}
-                <span
-                  className="absolute left-3 md:left-5 top-2 h-3.5 w-3.5 rounded-full ring-4"
-                  style={{
-                    background: "var(--arch)",
-                    boxShadow: "0 0 12px rgba(23,147,209,.65)",
-                    border: "1px solid rgba(255,255,255,.12)",
-                  }}
-                />
-
-                {/* карточка */}
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm hover:ring-1 hover:ring-[color:var(--arch)]/35 transition">
-                  <div className="text-[0.85rem] text-slate-400">{it.period}</div>
-                  <div className="mt-0.5 text-lg font-medium text-slate-100">{it.title}</div>
-                  {it.desc && (
-                    <div className="mt-1.5 text-slate-300/90 text-[0.95rem] leading-relaxed">
-                      {it.desc}
-                    </div>
-                  )}
-                </div>
-              </motion.li>
-            );
-          })}
+              {/* карточка */}
+              <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm hover:ring-1 hover:ring-[color:var(--arch)]/35 transition">
+                <div className="text-[0.85rem] text-slate-400">{it.period}</div>
+                <div className="mt-0.5 text-lg font-medium text-slate-100">{it.title}</div>
+                {it.desc && (
+                  <div className="mt-1.5 text-slate-300/90 text-[0.95rem] leading-relaxed">
+                    {it.desc}
+                  </div>
+                )}
+              </div>
+            </motion.li>
+          ))}
         </ul>
       </div>
     </section>

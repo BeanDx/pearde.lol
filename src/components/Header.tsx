@@ -4,24 +4,25 @@ import { motion } from "framer-motion";
 import type { Transition, Variants } from "framer-motion";
 import { FaHome, FaUtensils, FaPhone } from "react-icons/fa";
 import LangSelect from "../components/ui/LangSelect";
+import { useTranslation } from "react-i18next";
 
 type LinkItem = {
   to: string;
-  label: string;
+  labelKey: string; // ключ для i18n
   end?: boolean;
   Icon: React.ComponentType<{ className?: string; size?: number }>;
 };
 
 const links: LinkItem[] = [
-  { to: "/", label: "Home", end: true, Icon: FaHome },
-  { to: "/rices", label: "Rices", Icon: FaUtensils },
-  { to: "/contacts", label: "Contacts", Icon: FaPhone },
+  { to: "/",        labelKey: "nav.home",     end: true, Icon: FaHome },
+  { to: "/rices",   labelKey: "nav.rices",               Icon: FaUtensils },
+  { to: "/contacts",labelKey: "nav.contacts",            Icon: FaPhone },
 ];
 
 const MotionNavLink = motion(NavLink);
 
 const tabVariants: Variants = {
-  rest: { rotate: 0, y: 0, scale: 1 },
+  rest:  { rotate: 0, y: 0, scale: 1 },
   hover: { rotate: -2, y: -1, scale: 1.02 },
 };
 
@@ -45,7 +46,7 @@ function ArchIcon({ className = "" }: { className?: string }) {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  // const { pathname } = useLocation();
+  const { t } = useTranslation();
 
   const tab = (active: boolean) =>
     "inline-flex items-center gap-2 leading-none transform-gpu origin-center will-change-transform " +
@@ -87,7 +88,7 @@ export default function Header() {
               const Icon = l.Icon;
               return (
                 <MotionNavLink
-                  key={l.to} // не зависим от pathname, чтоб не ремоунтить
+                  key={l.to}
                   to={l.to}
                   end={l.end}
                   className={({ isActive }) => tab(isActive)}
@@ -99,7 +100,7 @@ export default function Header() {
                   transition={tabSpring}
                 >
                   <Icon className="shrink-0 opacity-80" size={16} />
-                  <span>{l.label}</span>
+                  <span>{t(l.labelKey)}</span>
                 </MotionNavLink>
               );
             })}
@@ -148,11 +149,11 @@ export default function Header() {
               className={({ isActive }) => tab(isActive)}
             >
               <Icon className="shrink-0 opacity-80" size={16} />
-              <span>{l.label}</span>
+              <span>{t(l.labelKey)}</span>
             </NavLink>
           );
         })}
-        {/* селектор языка в мобилке */}
+
         <LangSelect />
       </motion.div>
     </header>

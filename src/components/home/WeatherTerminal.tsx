@@ -1,5 +1,6 @@
 import { useIpWeather } from "../../hooks/useIpWeather";
 import FakeTerminal from "../ui/FakeTerminal";
+import { useTranslation } from "react-i18next";
 
 const ASCII = String.raw`
     ____  _________    ____  ____  ______
@@ -10,6 +11,7 @@ const ASCII = String.raw`
 `;
 
 export default function WeatherTerminal() {
+  const { t } = useTranslation();
   const { loading, err, emoji, place, timeStr, tempC } = useIpWeather({ use24h: true });
 
   return (
@@ -22,7 +24,7 @@ export default function WeatherTerminal() {
     ? `⚠️ ${err}`
     : `🕒 ${timeStr}
 ${emoji}  ${tempC}°C, ${place}
-🖥  Uptime: 2 days 4 hours`}
+🖥  ${t('weather_term.uptime')}: 2 days 4 hours`}
         </pre>
       </FakeTerminal>
     </div>

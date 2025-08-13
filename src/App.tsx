@@ -15,7 +15,6 @@ function RouterView() {
       <Header />
       <main className="max-w-6xl mx-auto px-6 py-10">
         <AnimatePresence mode="wait">
-          {/* ключуем обёртку — AnimatePresence видит уход/приход */}
           <motion.div
             key={location.pathname}
             initial={{ opacity: 0, y: 12, filter: "blur(2px)" }}

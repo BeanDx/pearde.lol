@@ -25,7 +25,6 @@ export default function Bio() {
 
   return (
     <section className="max-w-6xl mx-auto space-y-4">
-      {/* Терминал */}
       <FakeTerminal
         prompt="max@archlinux"
         command="fastfetch"
@@ -36,7 +35,7 @@ export default function Bio() {
           style={{ gridTemplateColumns: "max-content 1fr" }}
         >
           <dt className="text-yellow-300">{t("bio.name")}</dt>
-          <dd>Max</dd>
+          <dd>{t("bio.nameValue")}</dd>
 
           <dt className="text-yellow-300">{t("bio.age")}</dt>
           <dd>19</dd>
@@ -52,14 +51,11 @@ export default function Bio() {
 
           <dt className="text-yellow-300">{t("bio.info")}</dt>
           <dd className="text-green-300/90 leading-relaxed">
-            Frontend enjoyer, React clicker, ex-C# sorcerer, C++ pointer tamer,
-            touched Kotlin once and survived. Knows enough code to make things
-            work (and sometimes even look pretty).
+            {t("bio.infoValue")}
           </dd>
         </dl>
       </FakeTerminal>
 
-      {/* Пингвин в той же секции, без разрыва фона */}
       <div className="flex flex-col items-center">
         <pre className="whitespace-pre text-emerald-400/80 text-[10px] sm:text-[12px] select-none leading-none">
           {ASCII_PENGUIN}
@@ -71,7 +67,7 @@ export default function Bio() {
           transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
           className="mt-1 inline-block text-sm sm:text-base text-slate-400 hover:text-slate-200 transition-colors"
         >
-          ↓ scroll below 
+          {t("bio.scrollBelow")}
         </motion.a>
       </div>
     </section>

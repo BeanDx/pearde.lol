@@ -1,13 +1,25 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
+import type { ReactNode } from "react";
 
-type LangCode = "en" | "de";
-type Lang = { code: LangCode; label: string; flag: string };
+type LangCode = "en" | "de" | "ru";
+type Lang = { code: LangCode; label: string; flag: ReactNode };
+
+/* Free Russia [svg]) */
+function FreeRussiaFlag({ className = "h-4 w-6 rounded-sm ring-1 ring-black/10 overflow-hidden" }) {
+  return (
+    <svg viewBox="0 0 3 2" className={className} aria-hidden="true">
+      <rect x="0" y="0" width="3" height="2" fill="#ffffff" />
+      <rect x="0" y={2 / 3} width="3" height={2 / 3} fill="#2f5aff" />
+    </svg>
+  );
+}
 
 const LANGS: Lang[] = [
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "de", label: "Deutsch", flag: "🇩🇪" },
+  { code: "en", label: "English",  flag: <span className="text-base">🇬🇧</span> },
+  { code: "de", label: "Deutsch",  flag: <span className="text-base">🇩🇪</span> },
+  { code: "ru", label: "Русский",  flag: <FreeRussiaFlag /> },
 ];
 
 export default function LangSelect() {
@@ -21,7 +33,6 @@ export default function LangSelect() {
     Math.max(0, LANGS.findIndex((l) => l.code === current))
   );
 
-  // закрытие по клику вне
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
       if (!rootRef.current) return;
@@ -31,7 +42,7 @@ export default function LangSelect() {
     return () => document.removeEventListener("mousedown", onDoc);
   }, []);
 
-  // курсор на активный при открытии
+
   useEffect(() => {
     if (open) setCursor(Math.max(0, LANGS.findIndex((l) => l.code === current)));
   }, [open, current]);
@@ -78,7 +89,6 @@ export default function LangSelect() {
 
   return (
     <div ref={rootRef} className="relative inline-block text-sm">
-      {/* кнопка */}
       <button
         ref={btnRef}
         type="button"
@@ -90,7 +100,7 @@ export default function LangSelect() {
         aria-expanded={open}
         aria-label="Change language"
       >
-        <span className="text-base leading-none">{activeLang.flag}</span>
+        {activeLang.flag}
         <span className="uppercase tracking-wide">{activeLang.code}</span>
         <motion.span
           aria-hidden
@@ -102,7 +112,6 @@ export default function LangSelect() {
         </motion.span>
       </button>
 
-      {/* дропдаун */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -130,10 +139,9 @@ export default function LangSelect() {
                               ${active ? "font-medium" : ""}`}
                   initial={false}
                 >
-                  <span className="text-base">{l.flag}</span>
+                  {l.flag}
                   <span className="flex-1">{l.label}</span>
 
-                  {/* галочка */}
                   <motion.span
                     initial={false}
                     animate={{ opacity: active ? 1 : 0, x: active ? 0 : -6 }}
@@ -141,7 +149,6 @@ export default function LangSelect() {
                     ✓
                   </motion.span>
 
-                  {/* хайлайт выбранного */}
                   {focused && (
                     <motion.span
                       layoutId="lang_focus_ring"
