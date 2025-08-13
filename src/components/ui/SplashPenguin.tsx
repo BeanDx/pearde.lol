@@ -48,13 +48,11 @@ export default function SplashPenguin({
   const [progress, setProgress] = useState(0); // 0..1
   const [lineIdx, setLineIdx] = useState(0);
 
-  // показывать сплэш вообще или нет (1-й визит vs каждый визит)
   const shouldShow = useMemo(() => {
     if (everyVisit) return true;
     try { return !localStorage.getItem(versionKey); } catch { return true; }
   }, [everyVisit, versionKey]);
 
-  // Основная логика: держим сплэш нужное время, сайт пока НЕ рендерим
   useEffect(() => {
     if (!shouldShow) { setShowSplash(false); return; }
 
@@ -86,7 +84,6 @@ export default function SplashPenguin({
           return;
         }
       } else {
-        // "min": ждём минимум времени И (по возможности) onload
         if (timeDone && loaded) {
           try { if (!everyVisit) localStorage.setItem(versionKey, "1"); } catch {}
           setShowSplash(false);
@@ -104,7 +101,6 @@ export default function SplashPenguin({
     };
   }, [shouldShow, mode, duration, everyVisit, versionKey]);
 
-  // вернём скролл когда всё скрыли
   useEffect(() => {
     if (!showSplash) {
       document.documentElement.classList.remove("overflow-hidden");
@@ -112,17 +108,14 @@ export default function SplashPenguin({
     }
   }, [showSplash]);
 
-  // Пока сплэш открыт — детей НЕ рендерим вообще (жёсткий гейт)
   if (showSplash && shouldShow) {
     return (
       <>
         <SplashOverlay progress={progress} line={BOOT_LINES[lineIdx]} />
-        {/* children не монтируем */}
       </>
     );
   }
 
-  // Сплэш закрыт — рендерим сайт
   return <>{children}</>;
 }
 

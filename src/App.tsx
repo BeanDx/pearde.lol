@@ -8,6 +8,7 @@ import Contacts from "./pages/Contacts";
 import NotFound from "./pages/NotFound";
 
 import SplashPenguin from "./components/ui/SplashPenguin";
+import AsciiMatrix from "./components/ui/AsciiMatrix"; // background rain
 
 function RouterView() {
   const location = useLocation();
@@ -41,13 +42,30 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="never">
       <BrowserRouter>
+        {/* gate + splash; blocks site render until done */}
         <SplashPenguin
-          mode="fixed"      // держим строго N мс; или "min"
-          duration={800}   // 2 секунды — прям успеешь рассмотреть
+          mode="fixed"
+          duration={800}
           everyVisit={true}
           versionKey="tux_gate_v3"
         >
-          <RouterView />
+          {/* background layer */}
+          <AsciiMatrix
+            // pulls --arch from :root by default
+            fadeAlpha={2}
+            fontSize={10}
+            speed={0.6}
+            columnStride={1}
+            charset="01;:+=*#ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            disableOnTouch={true}
+            minWidth={768}
+            zIndex={0}
+          />
+
+          {/* content above background */}
+          <div className="relative z-[1]">
+            <RouterView />
+          </div>
         </SplashPenguin>
       </BrowserRouter>
     </MotionConfig>
