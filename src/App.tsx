@@ -7,6 +7,8 @@ import Rices from "./pages/Rices";
 import Contacts from "./pages/Contacts";
 import NotFound from "./pages/NotFound";
 
+import SplashPenguin from "./components/ui/SplashPenguin";
+
 function RouterView() {
   const location = useLocation();
 
@@ -39,7 +41,14 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="never">
       <BrowserRouter>
-        <RouterView />
+        <SplashPenguin
+          mode="fixed"      // держим строго N мс; или "min"
+          duration={800}   // 2 секунды — прям успеешь рассмотреть
+          everyVisit={true}
+          versionKey="tux_gate_v3"
+        >
+          <RouterView />
+        </SplashPenguin>
       </BrowserRouter>
     </MotionConfig>
   );
