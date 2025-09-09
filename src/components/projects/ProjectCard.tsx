@@ -4,6 +4,21 @@ import { FaGithub } from "react-icons/fa";
 import TiltCard from "../ui/TildCard";
 import type { Project } from "../../lib/projectsData";
 
+/* ───── legacy badge ───── */
+function LegacyBadge() {
+  return (
+    <span
+      className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md
+                 text-[10px] uppercase tracking-wider
+                 bg-amber-400/10 text-amber-300 border border-amber-300/25"
+    >
+      <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
+      legacy
+    </span>
+  );
+}
+
+/* ───────────────── component ───────────────── */
 export default function ProjectCard({ proj }: { proj: Project }) {
   const [copied, setCopied] = useState(false);
 
@@ -33,7 +48,7 @@ export default function ProjectCard({ proj }: { proj: Project }) {
           h-full flex flex-col min-h-[340px]
         "
       >
-        {/* локальный тост в углу карточки */}
+        {/* local toast */}
         <AnimatePresence>
           {copied && (
             <motion.div
@@ -49,8 +64,9 @@ export default function ProjectCard({ proj }: { proj: Project }) {
 
         {/* header */}
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-slate-200 group-hover:text-white">
+          <h2 className="text-xl font-semibold text-slate-200 group-hover:text-white flex items-center">
             {proj.title}
+            {proj.legacy && <LegacyBadge />}
           </h2>
           <div className="flex items-center gap-2">
             <button
@@ -68,7 +84,6 @@ export default function ProjectCard({ proj }: { proj: Project }) {
         {/* desc */}
         <p className="text-slate-400 mt-2 text-sm">{proj.description}</p>
 
-        {/* preview 16:9 */}
         {proj.image && (
           <div className="relative mt-4 rounded-lg border border-white/10 shadow-md overflow-hidden">
             <div className="pt-[56%]" />
