@@ -2,20 +2,21 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { Transition, Variants } from "framer-motion";
-import { FaHome, FaUtensils, FaPhone } from "react-icons/fa";
+import { FaHome, FaUtensils, FaPhone, FaFolderOpen } from "react-icons/fa";
 import LangSelect from "../components/ui/LangSelect";
 import { useTranslation } from "react-i18next";
-import Magnetic from "./Magnetic"; // добавили
+import Magnetic from "./Magnetic";
 
 type LinkItem = {
   to: string;
-  labelKey: string; // ключ для i18n
+  labelKey: string;
   end?: boolean;
   Icon: React.ComponentType<{ className?: string; size?: number }>;
 };
 
 const links: LinkItem[] = [
   { to: "/",        labelKey: "nav.home",     end: true, Icon: FaHome },
+  { to: "/projects",labelKey: "nav.projects",            Icon: FaFolderOpen },
   { to: "/rices",   labelKey: "nav.rices",               Icon: FaUtensils },
   { to: "/contacts",labelKey: "nav.contacts",            Icon: FaPhone },
 ];
@@ -60,7 +61,6 @@ export default function Header() {
     <header className="fixed top-0 inset-x-0 z-[999] border-b border-white/10
       bg-[#0f172a]/70 backdrop-blur-md supports-[backdrop-filter:blur(0)]:bg-[#0f172a]/60">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* бренд */}
         <motion.div
           className="select-none"
           whileHover={{ rotate: -1, y: -1 }}
@@ -82,7 +82,7 @@ export default function Header() {
           </NavLink>
         </motion.div>
 
-        {/* десктоп меню + селектор */}
+        {/* десктоп меню */}
         <div className="hidden md:flex items-center gap-4">
           <nav className="flex gap-4">
             {links.map((l) => {
@@ -108,7 +108,6 @@ export default function Header() {
             })}
           </nav>
 
-          {/* селектор языка */}
           <LangSelect />
         </div>
 

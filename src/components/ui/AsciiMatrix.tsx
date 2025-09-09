@@ -121,19 +121,17 @@ export default function AsciiMatrix({
         if (y > heightRef.current && Math.random() > 0.975) {
           dropsRef.current[i] = Math.floor(Math.random() * -20);
         } else {
-          dropsRef.current[i] += speed; // чем больше, тем быстрее "дождь"
+          dropsRef.current[i] += speed;
         }
       }
 
       rafRef.current = requestAnimationFrame(loop);
     };
 
-    // если нельзя/не нужно анимировать — не запускаем цикл
     if (!(reducedMotion || isTouchish)) {
       loop();
       window.addEventListener("resize", onResize);
     } else {
-      // статичный фон, один кадр
       const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -166,7 +164,7 @@ export default function AsciiMatrix({
         inset: 0,
         zIndex,
         pointerEvents: "none",
-        opacity: 0.8, // можно подрегулировать
+        opacity: 0.8,
       }}
     />
   );

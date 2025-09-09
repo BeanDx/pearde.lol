@@ -5,7 +5,12 @@ const resources = {
     en: {
         common: {
             // header 
-            nav: { home: "Home", rices: "Rices", contacts: "Contacts" },
+            nav: { 
+                home: "Home", 
+                rices: "Rices", 
+                contacts: "Contacts",
+                projects: "Projects"
+            },
 
             // bio component
             bio: {
@@ -60,7 +65,12 @@ const resources = {
     de: {
         common: {
             // header 
-            nav: { home: "Start", rices: "Rices", contacts: "Kontakte" },
+            nav: { 
+                home: "Start", 
+                rices: "Rices", 
+                contacts: "Kontakte",
+                projects: "Projekte"
+            },
 
             // bio component
             bio: {
@@ -115,7 +125,12 @@ const resources = {
     ru: {
         common: {
             // header 
-            nav: { home: "Хоум", rices: "Райсы", contacts: "Связь" },
+            nav: { 
+                home: "Хоум", 
+                rices: "Райсы", 
+                contacts: "Связь",
+                projects: "Проекты"
+            },
 
             // bio component
             bio: {
