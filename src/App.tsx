@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 
 import SplashPenguin from "./components/ui/SplashPenguin";
 import AsciiMatrix from "./components/ui/AsciiMatrix"; // background rain
+import Projects from "./pages/Projects";
 
 function RouterView() {
   const location = useLocation();
@@ -29,6 +30,7 @@ function RouterView() {
               <Route path="/" element={<Home />} />
               <Route path="/rices" element={<Rices />} />
               <Route path="/contacts" element={<Contacts />} />
+              <Route path="/projects" element={<Projects />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </motion.div>
